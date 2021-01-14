@@ -8,6 +8,6 @@ class TitledNavigationBarItem {
   TitledNavigationBarItem({
     // @required this.icon,
     @required this.title,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor = Colors.transparent,
   });
 }
