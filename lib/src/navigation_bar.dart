@@ -41,8 +41,8 @@ class TitledBottomNavigationBar extends StatefulWidget {
 }
 
 class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
-  static const double BAR_HEIGHT = 60;
-  static const double INDICATOR_HEIGHT = 2;
+  static const double BAR_HEIGHT = 50;
+  static const double INDICATOR_HEIGHT = 5;
 
   bool get reverse => widget.reverse;
 
@@ -104,7 +104,13 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
                 curve: curve,
                 duration: duration,
                 child: Container(
-                  color: widget.indicatorColor ?? activeColor,
+                  decoration: BoxDecoration(
+                    color: widget.indicatorColor ?? activeColor,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(4),
+                      bottomRight: Radius.circular(4),
+                    ),
+                  ),
                   width: width / items.length,
                   height: INDICATOR_HEIGHT,
                 ),
@@ -137,10 +143,11 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
     );
   }
 
-    Widget _buildSelectedText(TitledNavigationBarItem item) {
+  Widget _buildSelectedText(TitledNavigationBarItem item) {
     return DefaultTextStyle.merge(
       child: item.title,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: activeColor),
+      style: TextStyle(
+          fontWeight: FontWeight.bold, fontSize: 15, color: activeColor),
     );
   }
 
