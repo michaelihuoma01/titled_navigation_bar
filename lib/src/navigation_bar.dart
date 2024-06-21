@@ -41,8 +41,8 @@ class TitledBottomNavigationBar extends StatefulWidget {
 }
 
 class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
-  static const double BAR_HEIGHT = 60;
-  static const double INDICATOR_HEIGHT = 2;
+  static const double BAR_HEIGHT = 50;
+  static const double INDICATOR_HEIGHT = 5;
 
   bool get reverse => widget.reverse;
 
@@ -68,48 +68,56 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
     activeColor = widget.activeColor ?? Theme.of(context).indicatorColor;
 
     return Container(
-      height: BAR_HEIGHT + MediaQuery.of(context).viewPadding.bottom,
-      width: width,
       decoration: BoxDecoration(
-        color: widget.inactiveStripColor ?? Theme.of(context).cardColor,
+        color: widget.inactiveStripColor,
         boxShadow: widget.enableShadow
             ? [
                 BoxShadow(color: Colors.black12, blurRadius: 10),
               ]
             : null,
       ),
-      child: Stack(
-        overflow: Overflow.visible,
-        children: <Widget>[
-          Positioned(
-            top: INDICATOR_HEIGHT,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: items.map((item) {
-                var index = items.indexOf(item);
-                return GestureDetector(
-                  onTap: () => _select(index),
-                  child: _buildItemWidget(item, index == widget.currentIndex),
-                );
-              }).toList(),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            width: width,
-            child: AnimatedAlign(
-              alignment:
-                  Alignment(_getIndicatorPosition(widget.currentIndex), 0),
-              curve: curve,
-              duration: duration,
-              child: Container(
-                color: widget.indicatorColor ?? activeColor,
-                width: width / items.length,
-                height: INDICATOR_HEIGHT,
+      child: Container(
+        height: BAR_HEIGHT,
+        width: width,
+        child: Stack(
+          overflow: Overflow.visible,
+          children: <Widget>[
+            Positioned(
+              top: INDICATOR_HEIGHT,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: items.map((item) {
+                  var index = items.indexOf(item);
+                  return GestureDetector(
+                    onTap: () => _select(index),
+                    child: _buildItemWidget(item, index == widget.currentIndex),
+                  );
+                }).toList(),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              top: 0,
+              width: width,
+              child: AnimatedAlign(
+                alignment:
+                    Alignment(_getIndicatorPosition(widget.currentIndex), 0),
+                curve: curve,
+                duration: duration,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: widget.indicatorColor ?? activeColor,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(4),
+                      bottomRight: Radius.circular(4),
+                    ),
+                  ),
+                  width: width / items.length,
+                  height: INDICATOR_HEIGHT,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -121,17 +129,25 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
     setState(() {});
   }
 
-  Widget _buildIcon(TitledNavigationBarItem item) {
-    return Icon(
-      item.icon,
-      color: reverse ? widget.inactiveColor : activeColor,
-    );
-  }
+  // Widget _buildIcon(TitledNavigationBarItem item) {
+  //   return Icon(
+  //     item.icon,
+  //     color: reverse ? widget.inactiveColor : activeColor,
+  //   );
+  // }
 
   Widget _buildText(TitledNavigationBarItem item) {
     return DefaultTextStyle.merge(
       child: item.title,
       style: TextStyle(color: reverse ? activeColor : widget.inactiveColor),
+    );
+  }
+
+  Widget _buildSelectedText(TitledNavigationBarItem item) {
+    return DefaultTextStyle.merge(
+      child: item.title,
+      style: TextStyle(
+          fontWeight: FontWeight.bold, fontSize: 15, color: activeColor),
     );
   }
 
@@ -147,12 +163,12 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
             opacity: isSelected ? 0.0 : 1.0,
             duration: duration,
             curve: curve,
-            child: reverse ? _buildIcon(item) : _buildText(item),
+            child: _buildText(item),
           ),
           AnimatedAlign(
             duration: duration,
-            alignment: isSelected ? Alignment.center : Alignment(0, 5.2),
-            child: reverse ? _buildText(item) : _buildIcon(item),
+            alignment: isSelected ? Alignment.center : Alignment(0, 52),
+            child: _buildSelectedText(item),
           ),
         ],
       ),
